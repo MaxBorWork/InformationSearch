@@ -1,0 +1,26 @@
+CREATE TABLE Document (
+    id int NOT NULL AUTO_INCREMENT,
+    title varchar(255),
+    path varchar(255),
+    text mediumtext,
+)
+
+CREATE TABLE Lemm (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255),
+    weight double,
+    lemm_doc_id int,
+)
+
+CREATE TABLE LemmDocument (
+    id int NOT NULL AUTO_INCREMENT,
+    document_id int,
+    lemm_id int,
+    lemm_frequency int,
+)
+
+CREATE TABLE SearchQuery (
+    id int NOT NULL AUTO_INCREMENT,
+    text mediumtext,
+
+)

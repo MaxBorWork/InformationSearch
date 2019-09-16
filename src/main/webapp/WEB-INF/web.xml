@@ -1,0 +1,30 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+						http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <display-name>Student Catalog Web Application</display-name>
+
+    <servlet>
+        <servlet-name>searchServlet</servlet-name>
+        <servlet-class>by.BSUIR.documentSearch.servlet.SearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>searchServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>documentServlet</servlet-name>
+        <servlet-class>by.BSUIR.documentSearch.servlet.DocumentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>documentServlet</servlet-name>
+        <url-pattern>/document</url-pattern>
+    </servlet-mapping>
+
+
+
+
+</web-app>
