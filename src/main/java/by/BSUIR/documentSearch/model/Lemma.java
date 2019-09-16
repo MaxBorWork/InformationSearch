@@ -1,6 +1,7 @@
 package by.BSUIR.documentSearch.model;
 
 public class Lemma {
+    private int id;
     private String name;
     private double weight;
     private int numOfDocsContains;
@@ -35,5 +36,13 @@ public class Lemma {
 
     public void setNumOfDocsContains(int numOfDocsContains) {
         this.numOfDocsContains = numOfDocsContains;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

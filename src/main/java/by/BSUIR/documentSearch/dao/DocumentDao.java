@@ -2,6 +2,7 @@ package by.BSUIR.documentSearch.dao;
 
 import by.BSUIR.documentSearch.Constant;
 import by.BSUIR.documentSearch.model.Document;
+import by.BSUIR.documentSearch.model.Lemma;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -11,6 +12,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DocumentDao {
 
@@ -70,5 +73,42 @@ public class DocumentDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getDocumentId(String title) {
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            PreparedStatement statement = con.prepareStatement(Constant.SQL_GET_DOCUMENT_ID_QUERY);
+            statement.setString(1, title);
+
+            ResultSet resultSet = statement.executeQuery();
+            int id = 0;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+                return id;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Document> getDocuments() {
+        List<Document> documents = new ArrayList<>();
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(Constant.SQL_GET_DOCUMENTS_QUERY);
+            while (resultSet.next()) {
+                documents.add(new Document(resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4)));
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return documents;
     }
 }

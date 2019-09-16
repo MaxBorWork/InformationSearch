@@ -28,18 +28,19 @@ public class FileController {
                 }
             }
         }
+        lemmaController.setLemmas();
     }
 
     private void processFile(String name) {
         String fileContent = readFile(name);
-        Document document = new Document("todo.txt", fileContent);
+        Document document = new Document(name, fileContent);
         documentDao.saveDocument(document);
+        document.setId(documentDao.getDocumentId(name));
         try {
             lemmaController.parseDocument(document);
         } catch (MyStemApplicationException e) {
             e.printStackTrace();
         }
-
     }
 
     private String readFile(String path) {

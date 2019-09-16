@@ -1,8 +1,10 @@
 package by.BSUIR.documentSearch.controller;
 
 import by.BSUIR.documentSearch.dao.LemmaDao;
+import by.BSUIR.documentSearch.dao.LemmaDocumentDao;
 import by.BSUIR.documentSearch.model.Document;
 import by.BSUIR.documentSearch.model.Lemma;
+import by.BSUIR.documentSearch.model.LemmaDocument;
 import ru.stachek66.nlp.mystem.holding.Factory;
 import ru.stachek66.nlp.mystem.holding.MyStem;
 import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
@@ -12,6 +14,7 @@ import scala.Option;
 import scala.collection.JavaConversions;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +26,15 @@ public class LemmaController {
                     .newMyStem("3.0", Option.<File>empty()).get();
 
     private LemmaDao lemmaDao;
-    private Map<String, Integer> lexCount = new HashMap<>();
+    private LemmaDocumentDao lemmaDocumentDao;
+    private Map<String, Integer> lemmaCount = new HashMap<>();
     private List<Lemma> lemmas;
+    private List<LemmaDocument> lemmaDocuments;
 
     public LemmaController() {
+        lemmaDocuments = new ArrayList<>();
         this.lemmaDao = new LemmaDao();
+        this.lemmaDocumentDao = new LemmaDocumentDao();
     }
 
     public void parseDocument(Document document) throws MyStemApplicationException {
@@ -38,7 +45,8 @@ public class LemmaController {
                                 .info()
                                 .toIterable());
         iterateInfo(result);
-        document.setLemmCount(lexCount);
+        document.setLemmCount(lemmaCount);
+        saveLemmaDocument(document.getId());
     }
 
     private void iterateInfo(Iterable<Info> result) {
@@ -54,7 +62,7 @@ public class LemmaController {
     }
 
     private void isLexInList(String lex) {
-        if (!lexCount.containsKey(lex)) {
+        if (!lemmaCount.containsKey(lex)) {
             processLemmaForSave(lex);
         } else {
             increaseLexCount(lex);
@@ -69,7 +77,7 @@ public class LemmaController {
     }
 
     private void saveLexToList(String lex) {
-        lexCount.put(lex, 1);
+        lemmaCount.put(lex, 1);
     }
 
     private boolean isInDB(String lex) {
@@ -82,6 +90,26 @@ public class LemmaController {
     }
 
     private void increaseLexCount(String lex) {
-        lexCount.put(lex, lexCount.get(lex)+1);
+        lemmaCount.put(lex, lemmaCount.get(lex)+1);
+    }
+
+    private void saveLemmaDocument(int documentID) {
+        for (Map.Entry<String, Integer> lemmaCountEntity : lemmaCount.entrySet()) {
+            LemmaDocument lemmaDocument = new LemmaDocument(
+                    lemmaDao.getLemma(lemmaCountEntity.getKey()).getId(),
+                    documentID,
+                    lemmaCountEntity.getValue()
+            );
+            lemmaDocuments.add(lemmaDocument);
+        }
+        lemmaDocumentDao.saveLemmaDocuments(lemmaDocuments);
+    }
+
+    public List<Lemma> getLemmas() {
+        return lemmas;
+    }
+
+    public void setLemmas() {
+        this.lemmas = lemmaDao.getLemmas();
     }
 }

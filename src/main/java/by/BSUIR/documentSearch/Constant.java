@@ -5,25 +5,26 @@ public class Constant {
     public static String dbUrl = "jdbc:mysql://localhost:3306/documentSearch?useUnicode=true&characterEncoding=utf8";;
     public static String dbUser = "root";
     public static String dbPassword = "root";
-    public static String SQL_CREATE_DOCUMENT_TABLE = "CREATE TABLE Document (" +
+    public static String SQL_CREATE_DOCUMENT_TABLE = "CREATE TABLE IF NOT EXISTS Document (" +
             "id int NOT NULL AUTO_INCREMENT,\n" +
             "title varchar(255),\n" +
             "path varchar(255),\n" +
             "text mediumtext\n" +
             ")";
 
-    public static String SQL_CREATE_LEMMA_TABLE = "CREATE TABLE Lemma (" +
+    public static String SQL_CREATE_LEMMA_TABLE = "CREATE TABLE IF NOT EXISTS Lemma (" +
             "id int NOT NULL AUTO_INCREMENT,\n" +
             "name varchar(255),\n" +
-            "weight double,\n" +
+            "isKey int,\n" +
             ")";
 
-    public static String SQL_CREATE_LEMMA_DOCUMENT_TABLE = "CREATE TABLE LemmaDocument (" +
+    public static String SQL_CREATE_LEMMA_DOCUMENT_TABLE = "CREATE TABLE IF NOT EXISTS LemmaDocumentDao (" +
             "id int NOT NULL AUTO_INCREMENT,\n" +
             "lemma_id int NOT NULL,\n" +
             "document_id int NOT NULL,\n" +
             "num_of_repeats int,\n" +
             "lemma_weight double,\n" +
+            "key_lemma_weight double,\n" +
             ")";
 
     public static String SQL_GET_COL_OF_DOCUMENTS_QUERY = "SELECT COUNT(id) FROM Document";
@@ -37,12 +38,23 @@ public class Constant {
             "VALUES (?,?)";
 
     public static String SQL_INSERT_LEMMA_QUERY = "INSERT INTO Lemma" +
-            "(name, weight)" +
+            "(name, weight, num_of_repeats)" +
+            "VALUES (?,?,?)";
+
+    public static String SQL_INSERT_LEMMA_DOCUMENT_QUERY = "INSERT INTO LemmaDocument" +
+            "(lemma_id, document_id)" +
             "VALUES (?,?)";
+
+//    public static final String SQL_UPDATE_LEMMA_DOCUMENT_QUERY = "UPDATE LemmaDocument SET num_of_repeats=?" +
+//            " WHERE LemmaDocument.lemma_id ";
 
     public static String SQL_GET_LEMMAS_QUERY = "SELECT (name, weight) FROM Lemma";
 
-    public static String SQL_GET_LEMMA_QUERY = "SELECT (name, weight) FROM Lemma WHERE name=?";
+    public static String SQL_GET_DOCUMENTS_QUERY = "SELECT * FROM Document";
+
+    public static String SQL_GET_DOCUMENT_ID_QUERY = "SELECT id FROM Document WHERE title=?";
+
+    public static String SQL_GET_LEMMA_QUERY = "SELECT (id, name) FROM Lemma WHERE name=?";
 
     public static String SQL_DELETE_DOCUMENT_QUERY = "DELETE FROM Document WHERE title=?";
 

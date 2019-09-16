@@ -1,30 +1,33 @@
 package by.BSUIR.documentSearch.model;
 
 import java.util.Map;
-import java.util.Vector;
 
 public class Document {
+    private int id;
     private String title;
     private String text;
-    private String date;
-    private String time;
-    private int documentID;
+    private String path;
 
     private Map<Integer, Double> documentVector;
-    private Map<String, Integer> lemmCount;
+    private Map<String, Integer> lemmaCount;
 
-    public Document(String title, String text, String date, String time, int documentID, Map<Integer, Double> documentVector) {
+    public Document(String title, String text, int id) {
         this.title = title;
         this.text = text;
-        this.date = date;
-        this.time = time;
-        this.documentVector = documentVector;
+        this.id = id;
     }
 
-    public Document(String title, String text, Map<String, Integer> lemmCount) {
+    public Document(String title, String text, Map<String, Integer> lemmaCount) {
         this.title = title;
         this.text = text;
-        this.lemmCount = lemmCount;
+        this.lemmaCount = lemmaCount;
+    }
+
+    public Document(int id, String title, String path, String text) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+        this.path = path;
     }
 
     public Document(String title, String text) {
@@ -46,36 +49,6 @@ public class Document {
      *
      *
      */
-    Integer numberOfDocInBase = 1000;
-    Integer numberOfDocWithThisLem = 500;
-
-    public Vector<Double> createDocumentVector() {
-        Vector<Double> vectorForDoc = new Vector<>();
-        Vector<Double> numerator = new Vector<>();
-        Double denominator = 0.0;
-        Double amount = 0.0;
-
-        for (int i = 0; i < lemmCount.size(); i++) {
-//            numerator.add(this.numberOfOccurrencesLemInDoc(lemmCount.get(i)) * Math.log(numberOfDocInBase / numberOfDocWithThisLem));
-        }
-
-        for (int i = 0; i < numerator.size(); i++) {
-            amount += numerator.get(i) * numerator.get(i);
-        }
-
-        denominator = Math.sqrt(amount);
-
-        for (int i = 0; i < numerator.size(); i++) {
-            vectorForDoc.add(numerator.get(i) / denominator);
-        }
-
-        return vectorForDoc;
-    }
-
-    private int numberOfOccurrencesLemInDoc(String lem) {
-        //TODO получить число вхождений лемы в документ
-        return 0;
-    }
 
     public String getTitle() {
         return title;
@@ -93,28 +66,12 @@ public class Document {
         this.text = text;
     }
 
-    public String getDate() {
-        return date;
+    public int getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public int getDocumentID() {
-        return documentID;
-    }
-
-    public void setDocumentID(int documentID) {
-        this.documentID = documentID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Map<Integer, Double> getDocumentVector() {
@@ -126,10 +83,26 @@ public class Document {
     }
 
     public Map<String, Integer> getLemmCount() {
-        return lemmCount;
+        return lemmaCount;
     }
 
     public void setLemmCount(Map<String, Integer> lemmCount) {
-        this.lemmCount = lemmCount;
+        this.lemmaCount = lemmCount;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Map<String, Integer> getLemmaCount() {
+        return lemmaCount;
+    }
+
+    public void setLemmaCount(Map<String, Integer> lemmaCount) {
+        this.lemmaCount = lemmaCount;
     }
 }

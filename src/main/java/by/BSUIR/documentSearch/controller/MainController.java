@@ -3,34 +3,33 @@ package by.BSUIR.documentSearch.controller;
 import by.BSUIR.documentSearch.dao.DocumentDao;
 import by.BSUIR.documentSearch.model.Document;
 
-import javax.print.Doc;
 import java.util.*;
 
 public class MainController {
 
     private SearchQueryController searchQueryController;
-    private Vector vectorSearchQuary;
-    private List<Document> documentList;
+    private Vector searchQuery;
+    private List<Document> documents;
     private List<String> documentsForResponse;
     private Map<Document, Integer> docToSimilarityMeasure;
     private SimilarityMeasureController similarityMeasureController;
     private LemmaController lemmaController;
+    private DocumentDao documentDao;
 
     public MainController(String searchRequest) {
         this.lemmaController = new LemmaController();
+        this.documentDao = new DocumentDao();
         this.searchQueryController = new SearchQueryController(searchRequest);
-        this.similarityMeasureController = new SimilarityMeasureController(searchQueryController.getVectorOfSearchQuary());
-        //TODO ЗДЕСЬ МНЕ НУЖЕН СПИСОК ДОКУМЕНТОВ тех которые у  теюя в структурке
-        // this.documentList
-
-
+        this.similarityMeasureController = new SimilarityMeasureController(searchQueryController.getVectorOfSearchQuery());
+        this.documents = documentDao.getDocuments();
     }
 
     public List<String> getListForResponse() {
         docToSimilarityMeasure = new HashMap<Document, Integer>();
 
-        for (Document doc : documentList) {
-            docToSimilarityMeasure.put(doc, similarityMeasureController.similarityMeasureFor(doc.createDocumentVector()));
+        // я вынес метод createDocumentVector() в DocumentController, но теперь хз как его оттуда вызвать(((
+        for (Document doc : documents) {
+//            docToSimilarityMeasure.put(doc, similarityMeasureController.similarityMeasureFor(doc.createDocumentVector()));
         }
 
         List<Integer> docBySimilarityMeasure = new ArrayList<Integer>(docToSimilarityMeasure.values());

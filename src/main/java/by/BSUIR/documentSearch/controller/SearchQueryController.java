@@ -12,7 +12,7 @@ public class SearchQueryController {
         //TODO здесь нужен список лемм
     }
 
-    public Vector getVectorOfSearchQuary(){
+    public Vector getVectorOfSearchQuery(){
         //TODO  а здесь список из 0 и 1 для запроса нужно сделать
         return new Vector();
     }
