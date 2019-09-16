@@ -1,5 +1,6 @@
 package by.BSUIR.documentSearch.servlet;
 
+import by.BSUIR.documentSearch.controller.FileController;
 import by.BSUIR.documentSearch.controller.MainController;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import java.util.*;
 public class SearchServlet extends HttpServlet {
     String reqToSearch = "";
     List<String> resultList = new ArrayList<String>();
+    Boolean firstRequest = true;
 
 
     @Override
@@ -29,6 +31,10 @@ public class SearchServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String searchRequest = req.getParameter("search");
 
+        if (firstRequest) {
+            new FileController();
+            firstRequest = false;
+        }
 
         System.out.println(searchRequest);
 

@@ -1,11 +1,12 @@
 package by.BSUIR.documentSearch.dao;
 
 import by.BSUIR.documentSearch.Constant;
-import by.BSUIR.documentSearch.model.Document;
-import by.BSUIR.documentSearch.model.Lemm;
+import by.BSUIR.documentSearch.model.Lemma;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LemmaDao {
 
@@ -27,25 +28,25 @@ public class LemmaDao {
         }
     }
 
-    public void saveLemma(Lemm lemm) {
+    public void saveLemma(Lemma lemma) {
         try {
             Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
-            if (lemm != null) {
+            if (lemma != null) {
 
                 PreparedStatement preparedStatement = con.prepareStatement(Constant.SQL_INSERT_LEMMA_QUERY);
-                preparedStatement.setString(1, lemm.getName());
-                preparedStatement.setDouble(2, lemm.getWeight());
+                preparedStatement.setString(1, lemma.getName());
+                preparedStatement.setDouble(2, lemma.getWeight());
                 preparedStatement .executeUpdate();
 
                 con.close();
-                log.info("lemma " + lemm.getName() + " saved");
+                log.info("lemma " + lemma.getName() + " saved");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Lemm getLemma(String name) {
+    public Lemma getLemma(String name) {
         try {
             Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
             if (!name.equals("")) {
@@ -53,20 +54,37 @@ public class LemmaDao {
                 PreparedStatement preparedStatement = con.prepareStatement(Constant.SQL_GET_LEMMA_QUERY);
                 preparedStatement.setString(1, name);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                Lemm lemm = new Lemm();
+                Lemma lemma = new Lemma();
                 if (resultSet.next()) {
-                    lemm.setName(resultSet.getString(1));
-                    lemm.setWeight(resultSet.getDouble(2));
+                    lemma.setName(resultSet.getString(1));
+                    lemma.setWeight(resultSet.getDouble(2));
                     con.close();
 
-                    log.info("found lemma " + lemm.getName());
-                    return lemm;
+                    log.info("found lemma " + lemma.getName());
+                    return lemma;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Lemma> getLemmas() {
+        List<Lemma> lemmata = new ArrayList<>();
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(Constant.SQL_GET_LEMMAS_QUERY);
+            while (resultSet.next()) {
+                lemmata.add(new Lemma(resultSet.getString(1),
+                        resultSet.getDouble(2)));
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lemmata;
     }
 
     public void deleteLemma(String name) {

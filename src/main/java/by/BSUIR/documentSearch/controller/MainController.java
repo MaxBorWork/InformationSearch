@@ -14,9 +14,10 @@ public class MainController {
     private List<String> documentsForResponse;
     private Map<Document, Integer> docToSimilarityMeasure;
     private SimilarityMeasureController similarityMeasureController;
+    private LemmaController lemmaController;
 
     public MainController(String searchRequest) {
-
+        this.lemmaController = new LemmaController();
         this.searchQueryController = new SearchQueryController(searchRequest);
         this.similarityMeasureController = new SimilarityMeasureController(searchQueryController.getVectorOfSearchQuary());
         //TODO ЗДЕСЬ МНЕ НУЖЕН СПИСОК ДОКУМЕНТОВ тех которые у  теюя в структурке

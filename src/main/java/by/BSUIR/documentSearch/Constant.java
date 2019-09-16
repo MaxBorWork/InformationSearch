@@ -40,6 +40,8 @@ public class Constant {
             "(name, weight)" +
             "VALUES (?,?)";
 
+    public static String SQL_GET_LEMMAS_QUERY = "SELECT (name, weight) FROM Lemma";
+
     public static String SQL_GET_LEMMA_QUERY = "SELECT (name, weight) FROM Lemma WHERE name=?";
 
     public static String SQL_DELETE_DOCUMENT_QUERY = "DELETE FROM Document WHERE title=?";

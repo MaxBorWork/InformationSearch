@@ -1,16 +1,16 @@
 package by.BSUIR.documentSearch.model;
 
-public class Lemm {
+public class Lemma {
     private String name;
     private double weight;
     private int numOfDocsContains;
 
-    public Lemm(String name, double weight) {
+    public Lemma(String name, double weight) {
         this.name = name;
         this.weight = weight;
     }
 
-    public Lemm() {
+    public Lemma() {
     }
 
     public String getName() {
