@@ -3,8 +3,10 @@ package by.BSUIR.documentSearch.controller;
 import by.BSUIR.documentSearch.dao.DocumentDao;
 import by.BSUIR.documentSearch.model.Document;
 import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
+import ru.stachek66.nlp.mystem.model.Info;
 
 import java.io.*;
+import java.util.Map;
 
 public class FileController {
 
@@ -37,10 +39,14 @@ public class FileController {
         documentDao.saveDocument(document);
         document.setId(documentDao.getDocumentId(name));
         try {
-            lemmaController.parseDocument(document);
+            Iterable<Info> textLemmasIterable = lemmaController.parseText(fileContent);
+            lemmaController.processDocumentInfo(textLemmasIterable);
+            document.setLemmCount(lemmaController.getLemmaCount());
+            new LemmaDocumentController().saveLemmaDocument(document.getId(), document.getLemmaCount());
         } catch (MyStemApplicationException e) {
             e.printStackTrace();
         }
+
     }
 
     private String readFile(String path) {

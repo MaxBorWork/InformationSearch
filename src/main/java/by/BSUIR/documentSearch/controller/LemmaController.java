@@ -26,27 +26,42 @@ public class LemmaController {
                     .newMyStem("3.0", Option.<File>empty()).get();
 
     private LemmaDao lemmaDao;
-    private LemmaDocumentDao lemmaDocumentDao;
     private Map<String, Integer> lemmaCount = new HashMap<>();
     private List<Lemma> lemmas;
-    private List<LemmaDocument> lemmaDocuments;
+    private List<Option<String>> lexList;
+
 
     public LemmaController() {
-        lemmaDocuments = new ArrayList<>();
         this.lemmaDao = new LemmaDao();
-        this.lemmaDocumentDao = new LemmaDocumentDao();
     }
 
-    public void parseDocument(Document document) throws MyStemApplicationException {
-        final Iterable<Info> result =
-                JavaConversions.asJavaIterable(
-                        mystemAnalyzer
-                                .analyze(Request.apply(document.getText()))
-                                .info()
-                                .toIterable());
+    public Iterable<Info> parseText(String text) throws MyStemApplicationException {
+        return JavaConversions.asJavaIterable(
+                mystemAnalyzer
+                        .analyze(Request.apply(text))
+                        .info()
+                        .toIterable());
+    }
+
+    public void processQueryInfo(Iterable<Info> result) {
+        lexList = new ArrayList<>();
         iterateInfo(result);
-        document.setLemmCount(lemmaCount);
-        saveLemmaDocument(document.getId());
+    }
+
+    public List<String> getLemmasList() {
+        List<String> lemmasList = new ArrayList<>();
+        for (Option<String> lex : lexList) {
+            lemmasList.add(lex.get());
+        }
+        return lemmasList;
+    }
+
+    public void processDocumentInfo(Iterable<Info> result) {
+        lexList = new ArrayList<>();
+        iterateInfo(result);
+        for (Option<String> lex : lexList) {
+            isLexInList(lex.get());
+        }
     }
 
     private void iterateInfo(Iterable<Info> result) {
@@ -57,7 +72,7 @@ public class LemmaController {
 
     private void checkLex(Option<String> lex) {
         if (lex.nonEmpty()) {
-            isLexInList(lex.get());
+            lexList.add(lex);
         }
     }
 
@@ -93,23 +108,11 @@ public class LemmaController {
         lemmaCount.put(lex, lemmaCount.get(lex)+1);
     }
 
-    private void saveLemmaDocument(int documentID) {
-        for (Map.Entry<String, Integer> lemmaCountEntity : lemmaCount.entrySet()) {
-            LemmaDocument lemmaDocument = new LemmaDocument(
-                    lemmaDao.getLemma(lemmaCountEntity.getKey()).getId(),
-                    documentID,
-                    lemmaCountEntity.getValue()
-            );
-            lemmaDocuments.add(lemmaDocument);
-        }
-        lemmaDocumentDao.saveLemmaDocuments(lemmaDocuments);
-    }
-
-    public List<Lemma> getLemmas() {
-        return lemmas;
-    }
-
     public void setLemmas() {
         this.lemmas = lemmaDao.getLemmas();
+    }
+
+    public Map<String, Integer> getLemmaCount() {
+        return lemmaCount;
     }
 }
