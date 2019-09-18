@@ -30,6 +30,12 @@ public class Document {
         this.path = path;
     }
 
+    public Document(String title, String path, String text) {
+        this.title = title;
+        this.text = text;
+        this.path = path;
+    }
+
     public Document(String title, String text) {
         this.title = title;
         this.text = text;

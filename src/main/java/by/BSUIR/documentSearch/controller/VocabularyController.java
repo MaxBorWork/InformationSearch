@@ -1,6 +1,6 @@
 package by.BSUIR.documentSearch.controller;
 
-import by.BSUIR.documentSearch.model.Lemm;
+import by.BSUIR.documentSearch.model.Lemma;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ public class VocabularyController {
     private Integer numberOfDocInBase;
 
     private List<Double> weightList;
-    private List<Lemm> lemmList; //список лемм
+    private List<Lemma> lemmList; //список лемм
     private List<Vector<Document>> documentVector; //вектор документа
 
-    public VocabularyController(List<Lemm> lemmList, List<Vector<Document>> documentVector) {
+    public VocabularyController(List<Lemma> lemmList, List<Vector<Document>> documentVector) {
 
         this.numberOfDocInBase = documentVector.size();
         this.lemmList = lemmList;
@@ -25,15 +25,15 @@ public class VocabularyController {
 
     void createVocabulary() {///ATTENTION  VOID
         for(int i = 0; i < lemmList.size(); i++){
-            weightList.add(getNumberOfDocWithThisLemm(lemmList[i]), );
+//            weightList.add(getNumberOfDocWithThisLemm(lemmList[i]), );
         }
     }
 
-    void getNumberOfDocWithThisLemm(Lemm lemm){
+    void getNumberOfDocWithThisLemm(Lemma lemm){
         //TODO(Йо-хо-хо)
     }
 
-    Double calculateWeight(){
-
-return Math.log()    }
+//    Double calculateWeight(){
+//
+//return Math.log()    }
 }

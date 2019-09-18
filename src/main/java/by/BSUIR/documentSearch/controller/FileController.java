@@ -6,7 +6,6 @@ import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
 import ru.stachek66.nlp.mystem.model.Info;
 
 import java.io.*;
-import java.util.Map;
 
 public class FileController {
 
@@ -26,27 +25,32 @@ public class FileController {
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    processFile(file.getName());
+                    processFile(file.getName(), folder.getName() + "/" + file.getName());
                 }
             }
         }
         lemmaController.setLemmas();
     }
 
-    private void processFile(String name) {
-        String fileContent = readFile(name);
-        Document document = new Document(name, fileContent);
-        documentDao.saveDocument(document);
-        document.setId(documentDao.getDocumentId(name));
+    private void processFile(String name, String path) {
+        Iterable<Info> textLemmasIterable = null;
+        String fileContent = readFile(path);
+        Document document = new Document(name, path, fileContent);
+        int documentID = documentDao.getDocumentId(name);
+        if (documentID == 0) {
+            documentDao.saveDocument(document);
+            document.setId(documentDao.getDocumentId(name));
+        } else {
+            document.setId(documentID);
+        }
         try {
-            Iterable<Info> textLemmasIterable = lemmaController.parseText(fileContent);
-            lemmaController.processDocumentInfo(textLemmasIterable);
-            document.setLemmCount(lemmaController.getLemmaCount());
-            new LemmaDocumentController().saveLemmaDocument(document.getId(), document.getLemmaCount());
+            textLemmasIterable = lemmaController.parseText(fileContent);
         } catch (MyStemApplicationException e) {
             e.printStackTrace();
         }
-
+        lemmaController.processDocumentInfo(textLemmasIterable);
+        document.setLemmCount(lemmaController.getLemmaCount());
+        new LemmaDocumentController().saveLemmaDocument(document.getId(), document.getLemmaCount());
     }
 
     private String readFile(String path) {

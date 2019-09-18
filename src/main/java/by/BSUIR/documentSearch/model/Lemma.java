@@ -3,12 +3,11 @@ package by.BSUIR.documentSearch.model;
 public class Lemma {
     private int id;
     private String name;
-    private double weight;
     private int numOfDocsContains;
 
-    public Lemma(String name, double weight) {
+    public Lemma(int id, String name) {
+        this.id = id;
         this.name = name;
-        this.weight = weight;
     }
 
     public Lemma() {
@@ -20,14 +19,6 @@ public class Lemma {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
     }
 
     public int getNumOfDocsContains() {

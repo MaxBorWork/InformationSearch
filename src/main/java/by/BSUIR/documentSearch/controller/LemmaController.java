@@ -100,7 +100,8 @@ public class LemmaController {
     }
 
     private void saveLemma(String lex) {
-        Lemma lemma = new Lemma(lex, 1);
+        Lemma lemma = new Lemma();
+        lemma.setName(lex);
         lemmaDao.saveLemma(lemma);
     }
 

@@ -52,7 +52,7 @@ public class LemmaDocumentDao {
                 preparedStatement.setInt(1, lemmaDocument.getLemmaID());
                 preparedStatement.setInt(2, lemmaDocument.getDocumentID());
                 preparedStatement.setInt(3, lemmaDocument.getNumOfRepeats());
-                preparedStatement .addBatch();
+                preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
 

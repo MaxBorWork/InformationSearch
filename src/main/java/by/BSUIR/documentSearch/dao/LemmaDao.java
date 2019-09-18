@@ -35,7 +35,6 @@ public class LemmaDao {
 
                 PreparedStatement preparedStatement = con.prepareStatement(Constant.SQL_INSERT_LEMMA_QUERY);
                 preparedStatement.setString(1, lemma.getName());
-                preparedStatement.setDouble(2, lemma.getWeight());
                 preparedStatement .executeUpdate();
 
                 con.close();
@@ -56,8 +55,8 @@ public class LemmaDao {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 Lemma lemma = new Lemma();
                 if (resultSet.next()) {
-                    lemma.setName(resultSet.getString(1));
-                    lemma.setWeight(resultSet.getDouble(2));
+                    lemma.setId(resultSet.getInt(1));
+                    lemma.setName(resultSet.getString(2));
                     con.close();
 
                     log.info("found lemma " + lemma.getName());
@@ -77,8 +76,7 @@ public class LemmaDao {
             Statement statement = con.createStatement();
             ResultSet resultSet = statement.executeQuery(Constant.SQL_GET_LEMMAS_QUERY);
             while (resultSet.next()) {
-                lemmata.add(new Lemma(resultSet.getString(1),
-                        resultSet.getDouble(2)));
+                lemmata.add(new Lemma(resultSet.getInt(1), resultSet.getString(2)));
             }
             con.close();
         } catch (SQLException e) {

@@ -48,7 +48,8 @@ public class DocumentDao {
             if (document != null) {
                 PreparedStatement ps = con.prepareStatement(Constant.SQL_INSERT_DOCUMENT_QUERY);
                 ps.setString(1, document.getTitle());
-                ps.setString(2, document.getText());
+                ps.setString(2, document.getPath());
+                ps.setString(3, document.getText());
                 ps .executeUpdate();
                 con.close();
                 log.info("document " + document.getTitle() + " saved");
