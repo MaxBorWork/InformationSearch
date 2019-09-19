@@ -21,14 +21,6 @@ public class Lemma {
         this.name = name;
     }
 
-    public int getNumOfDocsContains() {
-        return numOfDocsContains;
-    }
-
-    public void setNumOfDocsContains(int numOfDocsContains) {
-        this.numOfDocsContains = numOfDocsContains;
-    }
-
     public int getId() {
         return id;
     }

@@ -31,7 +31,7 @@ public class DocumentController {
 
         for (Map.Entry<String, Integer> lemmaCountEntity : document.getLemmCount().entrySet()) {
             int lemmaID = lemmaDao.getLemma(lemmaCountEntity.getKey()).getId();
-            numberOfDocWithThisLem = lemmaDocumentDao.getDistinctDocumentsForLemma(lemmaID);
+            numberOfDocWithThisLem = lemmaDocumentDao.getColOfDocumentsForLemma(lemmaID);
             numerator.add(lemmaCountEntity.getValue() * Math.log(colOfDocumentsInBase / numberOfDocWithThisLem));
         }
 

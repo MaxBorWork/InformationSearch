@@ -2,6 +2,7 @@ package by.BSUIR.documentSearch.dao;
 
 import by.BSUIR.documentSearch.Constant;
 import by.BSUIR.documentSearch.model.Lemma;
+import by.BSUIR.documentSearch.model.LemmaDocument;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -40,6 +41,23 @@ public class LemmaDao {
                 con.close();
                 log.info("lemma " + lemma.getName() + " saved");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveLemmas(List<String> lemmas) {
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            PreparedStatement preparedStatement = con.prepareStatement(Constant.SQL_INSERT_LEMMA_QUERY);
+            for (String lemma : lemmas) {
+                preparedStatement.setString(1, lemma);
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+
+            con.close();
+            log.info("Saved " + lemmas.size() + " lemmas");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,6 +103,22 @@ public class LemmaDao {
         return lemmata;
     }
 
+    public List<String> getLemmaNames() {
+        List<String> names = new ArrayList<>();
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(Constant.SQL_GET_LEMMA_NAMES_QUERY);
+            while (resultSet.next()) {
+                names.add(resultSet.getString(1));
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return names;
+    }
+
     public void deleteLemma(String name) {
         try {
             Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
@@ -101,4 +135,5 @@ public class LemmaDao {
             e.printStackTrace();
         }
     }
+
 }

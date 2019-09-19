@@ -10,6 +10,7 @@ public class Constant {
             "title varchar(255),\n" +
             "path varchar(255),\n" +
             "text mediumtext,\n" +
+            "col_of_words int,\n" +
             "PRIMARY KEY (id)"+
             ")";
 
@@ -36,6 +37,10 @@ public class Constant {
 
     public static String SQL_GET_LEMMAS_FROM_DOCUMENT_QUERY = "SELECT * FROM LemmaDocument WHERE document_id=?";
 
+    public static String SQL_GET_LEMMA_COUNT_FROM_DOCUMENT_QUERY = "SELECT num_of_repeats" +
+                                                                    "FROM LemmaDocument" +
+                                                                    "WHERE document_id=? AND lemma_id=?";
+
     public static String SQL_INSERT_DOCUMENT_QUERY = "INSERT INTO Document" +
             "(title, path, text)" +
             "VALUES (?,?,?)";
@@ -48,14 +53,22 @@ public class Constant {
             "(lemma_id, document_id, num_of_repeats)" +
             "VALUES (?,?,?)";
 
+    public static String SQL_SET_LEMMA_WEIGHT_FOR_DOCUMENT_QUERY = "UPDATE LemmaDocument" +
+            "SET lemma_weight=?" +
+            "WHERE document_id=? AND lemma_id=?";
+
 //    public static final String SQL_UPDATE_LEMMA_DOCUMENT_QUERY = "UPDATE LemmaDocument SET num_of_repeats=?" +
 //            " WHERE LemmaDocument.lemma_id ";
 
     public static String SQL_GET_LEMMAS_QUERY = "SELECT id, name FROM Lemma";
 
+    public static String SQL_GET_LEMMA_NAMES_QUERY = "SELECT name FROM Lemma";
+
     public static String SQL_GET_DOCUMENTS_QUERY = "SELECT * FROM Document";
 
     public static String SQL_GET_DOCUMENT_ID_QUERY = "SELECT id FROM Document WHERE title=?";
+
+    public static String SQL_GET_DOCUMENT_COL_OF_WORDS_QUERY = "SELECT col_of_words FROM Document WHERE id=?";
 
     public static String SQL_GET_LEMMA_QUERY = "SELECT id, name FROM Lemma WHERE name=?";
 

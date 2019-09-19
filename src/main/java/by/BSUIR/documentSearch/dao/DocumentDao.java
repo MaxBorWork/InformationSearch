@@ -112,4 +112,21 @@ public class DocumentDao {
         }
         return documents;
     }
+
+    public int getDocumentColOfWords(int documentID) {
+        int colOfWords = 0;
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            PreparedStatement statement = con.prepareStatement(Constant.SQL_GET_DOCUMENT_COL_OF_WORDS_QUERY);
+            statement.setInt(1, documentID);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                colOfWords = resultSet.getInt(1);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return colOfWords;
+    }
 }

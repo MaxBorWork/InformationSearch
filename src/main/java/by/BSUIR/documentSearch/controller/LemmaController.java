@@ -1,5 +1,6 @@
 package by.BSUIR.documentSearch.controller;
 
+import by.BSUIR.documentSearch.dao.DocumentDao;
 import by.BSUIR.documentSearch.dao.LemmaDao;
 import by.BSUIR.documentSearch.dao.LemmaDocumentDao;
 import by.BSUIR.documentSearch.model.Document;
@@ -28,6 +29,8 @@ public class LemmaController {
     private LemmaDao lemmaDao;
     private Map<String, Integer> lemmaCount = new HashMap<>();
     private List<Lemma> lemmas;
+    private List<String> lemmasInDB;
+    private List<String> lemmasForSave;
     private List<Option<String>> lexList;
 
 
@@ -58,10 +61,13 @@ public class LemmaController {
 
     public void processDocumentInfo(Iterable<Info> result) {
         lexList = new ArrayList<>();
+        lemmasForSave = new ArrayList<>();
+        lemmasInDB = lemmaDao.getLemmaNames();
         iterateInfo(result);
         for (Option<String> lex : lexList) {
             isLexInList(lex.get());
         }
+        lemmaDao.saveLemmas(lemmasForSave);
     }
 
     private void iterateInfo(Iterable<Info> result) {
@@ -86,8 +92,8 @@ public class LemmaController {
 
     private void processLemmaForSave(String lex) {
         saveLexToList(lex);
-        if (!isInDB(lex)) {
-            saveLemma(lex);
+        if (!lemmasInDB.contains(lex)) {
+            lemmasForSave.add(lex);
         }
     }
 
@@ -95,19 +101,10 @@ public class LemmaController {
         lemmaCount.put(lex, 1);
     }
 
-    private boolean isInDB(String lex) {
-        return lemmaDao.getLemma(lex) != null;
-    }
-
-    private void saveLemma(String lex) {
-        Lemma lemma = new Lemma();
-        lemma.setName(lex);
-        lemmaDao.saveLemma(lemma);
-    }
-
     private void increaseLexCount(String lex) {
         lemmaCount.put(lex, lemmaCount.get(lex)+1);
     }
+
 
     public void setLemmas() {
         this.lemmas = lemmaDao.getLemmas();
