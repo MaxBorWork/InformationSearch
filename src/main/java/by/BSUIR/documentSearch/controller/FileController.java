@@ -19,7 +19,7 @@ public class FileController {
         this.documentDao = new DocumentDao();
         this.lemmaController = new LemmaController();
 
-        parseDirectory("/home/maksim/IdeaProjects/documentSearch/documents");
+        parseDirectory("/home/maksim/Документы/InformationSearch/documents");
     }
 
     private void parseDirectory(String path) {
@@ -29,13 +29,31 @@ public class FileController {
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    processFile(file.getName(), folder.getName() + "/" + file.getName());
+                    processFile(file.getName(), file.getAbsolutePath());
                 }
             }
         }
-        int numOfDocInBase = documentDao.getDocuments().size();
+        List<Document> dbDocumentsList = documentDao.getDocuments();
+        int numOfDocInBase = dbDocumentsList.size();
         Baze.getInstance(numOfDocInBase);
         lemmaController.setLemmas();
+
+        for(int i = 0; i < numOfDocInBase; i++ ){
+            Document document = dbDocumentsList.get(i);
+            DocumentController docContl = new DocumentController(document);
+            documents.add(
+                    new Document(
+                            document.getTitle(),
+                            document.getText(),
+                            document.getId(),
+                            document.getPath(),
+                            docContl.createDocumentVector(),
+                            document.getLemmaCount(),
+                            docContl.getKeyWords()
+
+                    ));
+        }
+
     }
 
     private void processFile(String name, String path) {
@@ -58,21 +76,11 @@ public class FileController {
         lemmaController.processDocumentInfo(textLemmasIterable);
         document.setLemmCount(lemmaController.getLemmaCount());
 
+
         new LemmaDocumentController().saveLemmaDocument(document.getId(), document.getLemmaCount());
 
-        DocumentController documentController = new DocumentController(document);
-        documentController.calculateLemmasWeight();
-        documents.add(
-                new Document(
-                        document.getTitle(),
-                        document.getText(),
-                        document.getId(),
-                        document.getPath(),
-                        documentController.createDocumentVector(),
-                        document.getLemmaCount(),
-                        documentController.getKeyWords()
 
-                ));
+
     }
 
 
