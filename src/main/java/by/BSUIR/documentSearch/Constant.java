@@ -37,6 +37,15 @@ public class Constant {
 
     public static String SQL_GET_LEMMAS_FROM_DOCUMENT_QUERY = "SELECT * FROM LemmaDocument WHERE document_id=?";
 
+    public static String SQL_GET_KEY_LEMMAS_FROM_DOCUMENT_QUERY = "SELECT Lemma.name, LemmaDocument.lemma_weight " +
+                                                                        "FROM LemmaDocument " +
+                                                                        "INNER JOIN Lemma" +
+                                                                        "ON LemmaDocument.lemma_id = Lemma.id" +
+                                                                        "WHERE LemmaDocument.id IN" +
+                                                                        "(SELECT id FROM LemmaDocument " +
+                                                                        "WHERE document_id=? " +
+                                                                        "ORDER BY lemma_weight DESC LIMIT 20)";
+
     public static String SQL_GET_LEMMA_COUNT_FROM_DOCUMENT_QUERY = "SELECT num_of_repeats" +
                                                                     "FROM LemmaDocument" +
                                                                     "WHERE document_id=? AND lemma_id=?";

@@ -1,4 +1,5 @@
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: Alena Pashkevich
   Date: 13.09.2019
@@ -29,14 +30,19 @@
 </form>
 <%
     List<String> results = (List<String>) request.getAttribute("resultList");
+    if(results == null){
+        results = new ArrayList<String>();
 
+
+    }
+    results.add("D:/new.txt");
     if (results != null && !results.isEmpty()) {
         out.println("<ul>");
         for (String result : results) {
-            out.println("<li class=\"chapters\">");
+            out.println("<li>");
             out.println(result);
-            //TODO(ссылочкі на док еслі нужно будет)
-           // out.println("<a href =\"/aipos/chapter?part="+partIndex +"&chapter="+chapterNames.indexOf(chapter)+"\">" + chapter+"</a>");
+
+            out.println("<a href =\"/document?path="+result+"\"</a>");
 
             out.println("</li>");
         }

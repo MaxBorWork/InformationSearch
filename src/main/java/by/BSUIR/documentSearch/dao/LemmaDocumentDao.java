@@ -168,4 +168,23 @@ public class LemmaDocumentDao {
         }
         return lemmaDocuments;
     }
+
+    public List<String> getKeyLemmasFromDocument(int documentID) {
+        List<String> keyLemmas = new ArrayList<>();
+        try {
+            Connection con = DriverManager.getConnection(Constant.dbUrl, Constant.dbUser, Constant.dbPassword);
+            if (documentID != 0) {
+
+                PreparedStatement preparedStatement = con.prepareStatement(Constant.SQL_GET_KEY_LEMMAS_FROM_DOCUMENT_QUERY);
+                preparedStatement.setInt(1, documentID);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    keyLemmas.add(resultSet.getString(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return keyLemmas;
+    }
 }

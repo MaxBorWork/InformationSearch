@@ -13,14 +13,31 @@ public class SearchQueryController {
     private List<String> lemmas;
     private LemmaController lemmaController;
 
-    public  SearchQueryController (String searchRequest){
-        this.searchRequest  = searchRequest;
+    public SearchQueryController(String searchRequest) {
+        this.searchRequest = searchRequest;
         this.lemmaController = new LemmaController();
         this.lemmas = getLemmasList();
     }
 
-    public Vector getVectorOfSearchQuery(){
-        //TODO  а здесь список из 0 и 1 для запроса нужно сделать
+
+    private Boolean include(String keyWord){
+        for(int i = 0; i< lemmas.size(); i++){
+            if(lemmas.get(i).equals(keyWord)) return true;
+
+        }
+        return false;
+    }
+
+    public Vector getVectorOfSearchQuery(List<String> documentKeyWords) {
+        Vector<Integer> vectorOfZeroAndOneForQuerySearch = new Vector<Integer>();
+
+        for (int i = 0; i < documentKeyWords.size(); i++) {
+            if (include(documentKeyWords.get(i))) {
+                vectorOfZeroAndOneForQuerySearch.add(1);
+            } else {
+                vectorOfZeroAndOneForQuerySearch.add(0);
+            }
+        }
         return new Vector();
     }
 

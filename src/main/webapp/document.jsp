@@ -13,6 +13,10 @@
 <body>
 <header>
     <h1>Поисковая система</h1>
+    <%
+    if(request.getAttribute("content")!= null){
+        out.println(request.getAttribute("content"));
+    }%>
 </header>
 </body>
 </html>

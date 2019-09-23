@@ -52,7 +52,7 @@ public class LemmaController {
     }
 
     public List<String> getLemmasList() {
-        List<String> lemmasList = new ArrayList<>();
+        List<String> lemmasList = new ArrayList<String>();
         for (Option<String> lex : lexList) {
             lemmasList.add(lex.get());
         }

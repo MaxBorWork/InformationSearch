@@ -1,6 +1,8 @@
 package by.BSUIR.documentSearch.model;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 public class Document {
     private int id;
@@ -8,8 +10,25 @@ public class Document {
     private String text;
     private String path;
 
-    private Map<Integer, Double> documentVector;
     private Map<String, Integer> lemmaCount;
+    private List<String> keyWords;
+    private  Vector<Double> documentVector;
+
+
+    public Document(String title, String text, int id, String path, Vector<Double> documentVector, Map<String, Integer> lemmaCount, List<String> keyWords) {
+        this.title = title;
+        this.text = text;
+        this.id = id;
+        this.path = path;
+        this.documentVector = documentVector;
+        this.lemmaCount = lemmaCount;
+        this.keyWords = keyWords;
+    }
+
+
+    public List<String> getKeyWords() {
+        return keyWords;
+    }
 
     public Document(String title, String text, int id) {
         this.title = title;
@@ -44,18 +63,6 @@ public class Document {
     public Document() {
     }
 
-    //TODO типо у меня есть все эти параметры
-
-    /***
-     * numberOfDocInBase - чсило документов в базе
-     * numberOfDocWithThisLem - число документов содержащих эти леммы
-     * numberOfOccurrencesLemInDoc - число вхождения слова в документ
-     * lemVector - вектор лем
-     *
-     *
-     *
-     */
-
     public String getTitle() {
         return title;
     }
@@ -80,11 +87,11 @@ public class Document {
         this.id = id;
     }
 
-    public Map<Integer, Double> getDocumentVector() {
+    public Vector< Double> getDocumentVector() {
         return documentVector;
     }
 
-    public void setDocumentVector(Map<Integer, Double> documentVector) {
+    public void setDocumentVector(Vector< Double> documentVector) {
         this.documentVector = documentVector;
     }
 

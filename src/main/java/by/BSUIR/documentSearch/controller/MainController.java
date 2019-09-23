@@ -12,24 +12,24 @@ public class MainController {
     private List<Document> documents;
     private List<String> documentsForResponse;
     private Map<Document, Integer> docToSimilarityMeasure;
-    private SimilarityMeasureController similarityMeasureController;
     private LemmaController lemmaController;
     private DocumentDao documentDao;
 
-    public MainController(String searchRequest) {
-        this.lemmaController = new LemmaController();
+    public MainController(String searchRequest, List<Document> docList) {
+   //     this.lemmaController = new LemmaController();
+        this.documents = docList;
         this.documentDao = new DocumentDao();
         this.searchQueryController = new SearchQueryController(searchRequest);
-        this.similarityMeasureController = new SimilarityMeasureController(searchQueryController.getVectorOfSearchQuery());
         this.documents = documentDao.getDocuments();
     }
 
     public List<String> getListForResponse() {
         docToSimilarityMeasure = new HashMap<Document, Integer>();
 
-        // я вынес метод createDocumentVector() в DocumentController, но теперь хз как его оттуда вызвать(((
         for (Document doc : documents) {
-//            docToSimilarityMeasure.put(doc, similarityMeasureController.similarityMeasureFor(doc.createDocumentVector()));
+
+           SimilarityMeasureController similarityMeasureController =  new SimilarityMeasureController(searchQueryController.getVectorOfSearchQuery(doc.getKeyWords()));
+            docToSimilarityMeasure.put(doc, similarityMeasureController.similarityMeasureFor(doc.getDocumentVector()));
         }
 
         List<Integer> docBySimilarityMeasure = new ArrayList<Integer>(docToSimilarityMeasure.values());

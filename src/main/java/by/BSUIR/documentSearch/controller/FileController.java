@@ -1,21 +1,25 @@
 package by.BSUIR.documentSearch.controller;
 
 import by.BSUIR.documentSearch.dao.DocumentDao;
+import by.BSUIR.documentSearch.model.Baze;
 import by.BSUIR.documentSearch.model.Document;
 import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
 import ru.stachek66.nlp.mystem.model.Info;
 
 import java.io.*;
+import java.util.List;
 
 public class FileController {
-
+    private List<Document> documents;
     private DocumentDao documentDao;
     private LemmaController lemmaController;
 
     public FileController() {
+
         this.documentDao = new DocumentDao();
         this.lemmaController = new LemmaController();
-        parseDirectory("documents");
+
+        parseDirectory("/home/maksim/IdeaProjects/documentSearch/documents");
     }
 
     private void parseDirectory(String path) {
@@ -29,12 +33,15 @@ public class FileController {
                 }
             }
         }
+        int numOfDocInBase = documentDao.getDocuments().size();
+        Baze.getInstance(numOfDocInBase);
         lemmaController.setLemmas();
     }
 
     private void processFile(String name, String path) {
         Iterable<Info> textLemmasIterable = null;
         String fileContent = readFile(path);
+
         Document document = new Document(name, path, fileContent);
         int documentID = documentDao.getDocumentId(name);
         if (documentID == 0) {
@@ -50,8 +57,24 @@ public class FileController {
         }
         lemmaController.processDocumentInfo(textLemmasIterable);
         document.setLemmCount(lemmaController.getLemmaCount());
+
         new LemmaDocumentController().saveLemmaDocument(document.getId(), document.getLemmaCount());
+
+        DocumentController documentController = new DocumentController(document);
+        documentController.calculateLemmasWeight();
+        documents.add(
+                new Document(
+                        document.getTitle(),
+                        document.getText(),
+                        document.getId(),
+                        document.getPath(),
+                        documentController.createDocumentVector(),
+                        document.getLemmaCount(),
+                        documentController.getKeyWords()
+
+                ));
     }
+
 
     private String readFile(String path) {
         InputStream is = null;
@@ -68,7 +91,7 @@ public class FileController {
             e.printStackTrace();
         }
         StringBuilder sb = new StringBuilder();
-        while(line != null){
+        while (line != null) {
             sb.append(line).append("\n");
             try {
                 line = buf.readLine();
@@ -79,4 +102,9 @@ public class FileController {
 
         return sb.toString();
     }
+
+    public List<Document> getDocumentList() {
+        return documents;
+    }
+
 }

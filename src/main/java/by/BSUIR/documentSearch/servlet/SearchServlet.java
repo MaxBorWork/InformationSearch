@@ -2,6 +2,7 @@ package by.BSUIR.documentSearch.servlet;
 
 import by.BSUIR.documentSearch.controller.FileController;
 import by.BSUIR.documentSearch.controller.MainController;
+import by.BSUIR.documentSearch.model.Document;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,7 @@ public class SearchServlet extends HttpServlet {
     String reqToSearch = "";
     List<String> resultList = new ArrayList<String>();
     Boolean firstRequest = true;
-
+    List<Document> documentList;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,7 +33,7 @@ public class SearchServlet extends HttpServlet {
         String searchRequest = req.getParameter("search");
 
         if (firstRequest) {
-            new FileController();
+            documentList = new FileController().getDocumentList();
             firstRequest = false;
         }
 
@@ -40,7 +41,7 @@ public class SearchServlet extends HttpServlet {
 
         //TODO(вставка проверкі запроса)
 
-        MainController process = new MainController(searchRequest);
+        MainController process = new MainController(searchRequest, documentList);
         resultList = process.getListForResponse();
 
         reqToSearch = searchRequest;

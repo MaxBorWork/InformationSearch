@@ -3,16 +3,17 @@ package by.BSUIR.documentSearch.controller;
 import by.BSUIR.documentSearch.dao.DocumentDao;
 import by.BSUIR.documentSearch.model.Document;
 
+import java.util.List;
 import java.util.Vector;
 
 public class SimilarityMeasureController {
-    private Vector searchQueryVector;
+    private List searchQueryVector;
 
-    public SimilarityMeasureController(Vector<Double> searchQueryVector) {
+    public SimilarityMeasureController(List<Double> searchQueryVector) {
         this.searchQueryVector = searchQueryVector;
     }
 
-    public Integer similarityMeasureFor(Vector<Double> documentVector) {
+    public Integer similarityMeasureFor(List<Double> documentVector) {
         Double ENsearchQuary = getEN(searchQueryVector);
         Double ENdocument = getEN(documentVector);
         Double scalar = getScalarProduct(searchQueryVector, documentVector);
@@ -20,7 +21,7 @@ public class SimilarityMeasureController {
         return (int) (scalar / (ENsearchQuary * ENdocument));
     }
 
-    private Double getEN(Vector<Double> vector) {
+    private Double getEN(List<Double> vector) {
         Double amount = 0.0;
 
         for (int i = 0; i < vector.size(); i++) {
@@ -30,7 +31,7 @@ public class SimilarityMeasureController {
         return Math.sqrt(amount);
     }
 
-    private Double getScalarProduct(Vector<Double> search, Vector<Double> document) {
+    private Double getScalarProduct(List<Double> search, List<Double> document) {
         Double amount = 0.0;
 
         for (int i = 0; i < search.size(); i++) {
